@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>British Red Cross – Manchester College Fundraiser</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --red:#C8102E; --dark-red:#8B0000; --light-red:#f8e8eb;
+    --cream:#FAF8F5; --dark:#1a1a1a; --mid:#444; --light:#f0ece6;
+    --white:#ffffff; --gold:#C9A84C; --border:#e0d6cc; --green:#2e7d32;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden;}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--white);border-bottom:3px solid var(--red);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;box-shadow:0 2px 20px rgba(0,0,0,0.08);}
+  .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;}
+  .nav-cross{width:38px;height:38px;background:var(--red);position:relative;border-radius:3px;flex-shrink:0;}
+  .nav-cross::before,.nav-cross::after{content:'';position:absolute;background:white;border-radius:2px;}
+  .nav-cross::before{width:22px;height:8px;top:15px;left:8px;}
+  .nav-cross::after{width:8px;height:22px;top:8px;left:15px;}
+  .nav-title{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--dark);line-height:1.2;}
+  .nav-sub{font-size:0.62rem;color:var(--mid);letter-spacing:0.04em;}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1rem;line-height:64px;text-decoration:none;color:var(--mid);font-size:0.82rem;font-weight:600;letter-spacing:0.03em;transition:color .2s,border-bottom .2s;border-bottom:3px solid transparent;margin-bottom:-3px;cursor:pointer;}
+  .nav-links a:hover,.nav-links a.active{color:var(--red);border-bottom-color:var(--red);}
+
+  /* PAGES */
+  .page{display:none;min-height:100vh;padding-top:64px;}
+  .page.active{display:block;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--dark) 0%,#2d0a12 50%,var(--dark-red) 100%);min-height:92vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:4rem 2rem;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(200,16,46,0.3) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(201,168,76,0.1) 0%,transparent 50%);}
+  .hero-bg-cross{position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:500px;height:500px;background:rgba(200,16,46,0.07);clip-path:polygon(38% 0%,62% 0%,62% 38%,100% 38%,100% 62%,62% 62%,62% 100%,38% 100%,38% 62%,0% 62%,0% 38%,38% 38%);}
+  .hero-content{position:relative;z-index:2;max-width:800px;}
+  .hero-tag{display:inline-block;background:var(--red);color:white;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;padding:6px 18px;border-radius:2px;margin-bottom:2rem;text-transform:uppercase;}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:900;color:white;line-height:1.08;margin-bottom:1.5rem;}
+  .hero h1 span{color:var(--gold);}
+  .hero p{font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto 0.7rem;font-weight:300;}
+  .hero-college{font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:2.5rem;letter-spacing:0.08em;}
+  .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{background:var(--red);color:white;border:2px solid var(--red);padding:14px 32px;font-size:0.88rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .25s;text-decoration:none;display:inline-block;}
+  .btn-primary:hover{background:var(--dark-red);border-color:var(--dark-red);transform:translateY(-2px);}
+  .btn-outline{background:transparent;color:white;border:2px solid rgba(255,255,255,0.5);padding:14px 32px;font-size:0.88rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .25s;display:inline-block;}
+  .btn-outline:hover{border-color:white;background:rgba(255,255,255,0.1);}
+
+  /* SECTIONS */
+  .section{padding:5rem 2rem;}
+  .section-inner{max-width:1080px;margin:0 auto;}
+  .section-label{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:0.6rem;}
+  .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--dark);margin-bottom:1rem;line-height:1.15;}
+  .section-sub{font-size:1.02rem;color:var(--mid);line-height:1.7;max-width:640px;font-weight:300;}
+  .page-divider{border:none;height:5px;background:linear-gradient(90deg,var(--red),var(--dark-red),var(--red));}
+
+  /* CARDS */
+  .card{background:white;border:1px solid var(--border);border-radius:6px;padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.05);position:relative;}
+  .card-accent{position:absolute;top:0;left:0;right:0;height:4px;background:var(--red);border-radius:6px 6px 0 0;}
+  .card h3{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--dark);margin-bottom:0.8rem;}
+  .card p{color:var(--mid);line-height:1.7;font-size:0.95rem;}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;}
+
+  .feature-pill{display:inline-flex;align-items:center;gap:8px;background:var(--light-red);color:var(--dark-red);padding:8px 16px;border-radius:30px;font-size:0.82rem;font-weight:600;margin:4px;}
+  .feature-pill::before{content:'✦';font-size:0.6rem;}
+
+  .aims-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-top:2rem;}
+  .aim-item{background:white;border:1px solid var(--border);border-radius:6px;padding:1.8rem 1.5rem;text-align:center;transition:transform .2s,box-shadow .2s;}
+  .aim-item:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.1);}
+  .aim-icon{font-size:2rem;margin-bottom:0.8rem;}
+  .aim-item h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--red);margin-bottom:0.5rem;}
+  .aim-item p{font-size:0.85rem;color:var(--mid);line-height:1.6;}
+
+  .strategy-card{background:white;border-left:5px solid var(--red);padding:1.8rem 2rem;border-radius:0 6px 6px 0;box-shadow:0 3px 15px rgba(0,0,0,0.06);transition:transform .2s;}
+  .strategy-card:hover{transform:translateX(4px);}
+  .strategy-card .num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--light-red);line-height:1;}
+  .strategy-card h4{font-size:1rem;font-weight:700;color:var(--dark);margin:0.3rem 0 0.6rem;}
+  .strategy-card p{font-size:0.9rem;color:var(--mid);line-height:1.6;}
+
+  table{width:100%;border-collapse:collapse;}
+  th{background:var(--red);color:white;padding:12px 16px;text-align:left;font-size:0.85rem;font-weight:700;letter-spacing:0.05em;}
+  td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:0.9rem;}
+  tr:nth-child(even) td{background:var(--light);}
+  tr:last-child td{border-bottom:none;}
+
+  .swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+  .swot-cell{padding:1.8rem;border-radius:6px;}
+  .swot-cell.s{background:#e8f5e9;border:1px solid #81c784;}
+  .swot-cell.w{background:#fff8e1;border:1px solid #ffd54f;}
+  .swot-cell.o{background:#e3f2fd;border:1px solid #64b5f6;}
+  .swot-cell.t{background:#fce4ec;border:1px solid #e57373;}
+  .swot-cell .swot-label{font-size:0.7rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.5rem;}
+  .swot-cell.s .swot-label{color:#2e7d32;} .swot-cell.w .swot-label{color:#f57f17;}
+  .swot-cell.o .swot-label{color:#1565c0;} .swot-cell.t .swot-label{color:#c62828;}
+  .swot-cell h4{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:0.5rem;}
+  .swot-cell p{font-size:0.87rem;line-height:1.6;color:#444;}
+
+  .example-card{background:white;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.07);border:1px solid var(--border);margin-bottom:2rem;}
+  .example-header{background:var(--red);color:white;padding:1.5rem 2rem;display:flex;align-items:center;gap:1rem;}
+  .ex-num{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+  .example-header h3{font-family:'Playfair Display',serif;font-size:1.3rem;}
+  .example-body{padding:2rem;}
+  .example-body p{color:var(--mid);line-height:1.7;margin-bottom:1.2rem;}
+  .img-placeholder{background:linear-gradient(135deg,#f5ece0,#ede0d4);border:2px dashed #d4b8a8;border-radius:8px;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;color:#8a6a58;gap:10px;margin:1rem 0;}
+  .img-placeholder .ph-icon{font-size:3rem;opacity:0.45;}
+  .img-placeholder p{font-size:0.85rem;font-weight:600;letter-spacing:0.05em;}
+  .img-placeholder span{font-size:0.75rem;opacity:0.7;}
+
+  /* SUPPORT BTN */
+  .support-btn-wrap{text-align:center;padding:3rem 2rem;}
+  .random-btn{background:var(--red);color:white;border:none;padding:18px 48px;font-size:1rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border-radius:4px;cursor:pointer;box-shadow:0 6px 25px rgba(200,16,46,0.35);transition:all .25s;display:inline-flex;align-items:center;gap:10px;}
+  .random-btn:hover{background:var(--dark-red);transform:translateY(-3px);}
+  .random-btn .heart{font-size:1.2rem;animation:heartbeat 1.4s ease infinite;}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.25)}28%{transform:scale(1)}}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:white;border-radius:10px;max-width:720px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,0.3);animation:modalIn .3s ease;}
+  @keyframes modalIn{from{opacity:0;transform:translateY(30px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .modal-header{background:var(--red);color:white;padding:2rem 2.5rem 1.5rem;position:relative;}
+  .modal-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;}
+  .modal-header p{opacity:.8;margin-top:.4rem;font-size:.9rem;}
+  .modal-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;line-height:1;opacity:.7;transition:opacity .2s;}
+  .modal-close:hover{opacity:1;}
+  .modal-body{padding:2rem 2.5rem;}
+  .support-section{margin-bottom:1.8rem;}
+  .support-section h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red);margin-bottom:.8rem;}
+  .support-section ul{list-style:none;}
+  .support-section li{padding:.5rem 0 .5rem 1rem;border-left:3px solid var(--light-red);margin-bottom:.5rem;font-size:.9rem;line-height:1.6;color:var(--mid);}
+  .support-section li strong{color:var(--dark);}
+  .support-divider{border:none;border-top:1px solid var(--border);margin:1.2rem 0;}
+
+  /* PAGE 4 — LEADERBOARD */
+  .lb-hero{background:linear-gradient(135deg,#0d0d0d 0%,#1a0508 60%,#2d0a12 100%);padding:5rem 2rem 3rem;text-align:center;}
+  .lb-hero h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);color:white;font-weight:900;margin-bottom:1rem;}
+  .lb-hero h2 em{color:var(--gold);font-style:normal;}
+  .lb-hero .hero-quote{color:rgba(255,255,255,0.65);font-size:1rem;line-height:1.7;max-width:560px;margin:0 auto 1rem;}
+  .lb-hero .college-badge{display:inline-block;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.55);font-size:0.72rem;font-weight:700;letter-spacing:0.12em;padding:6px 16px;border-radius:30px;text-transform:uppercase;}
+
+  /* QR */
+  .qr-section{background:white;border-bottom:3px solid var(--light);padding:2.5rem 2rem;}
+  .qr-inner{max-width:680px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+  .qr-card{text-align:center;padding:1.5rem;border-radius:8px;border:2px solid var(--border);}
+  .qr-card.admin-qr{border-color:#c62828;background:#fff8f8;}
+  .qr-card.public-qr{border-color:#1565c0;background:#f0f4ff;}
+  .qr-card h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:.4rem;}
+  .qr-card.admin-qr h4{color:#c62828;} .qr-card.public-qr h4{color:#1565c0;}
+  .qr-card p{font-size:0.78rem;color:var(--mid);margin-bottom:1rem;line-height:1.5;}
+  .qr-box{width:140px;height:140px;margin:0 auto .8rem;border-radius:6px;overflow:hidden;background:white;display:flex;align-items:center;justify-content:center;}
+  .qr-note{font-size:0.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+  .qr-card.admin-qr .qr-note{color:#c62828;} .qr-card.public-qr .qr-note{color:#1565c0;}
+
+  /* ADMIN GATE */
+  .admin-gate{max-width:440px;margin:2.5rem auto;padding:0 1rem;}
+  .admin-gate-box{background:white;border:2px solid #c62828;border-radius:8px;padding:2.5rem;text-align:center;}
+  .admin-gate-box h3{font-family:'Playfair Display',serif;color:#c62828;margin-bottom:.5rem;font-size:1.3rem;}
+  .admin-gate-box p{font-size:.85rem;color:var(--mid);margin-bottom:1.2rem;}
+  #admin-pw-input{width:100%;border:2px solid var(--border);border-radius:4px;padding:12px 14px;font-size:1.1rem;text-align:center;letter-spacing:.25em;font-family:'Source Sans 3',sans-serif;outline:none;transition:border-color .2s;}
+  #admin-pw-input:focus{border-color:#c62828;}
+  .admin-unlock-btn{margin-top:1rem;width:100%;background:#c62828;color:white;border:none;padding:13px;border-radius:4px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s;letter-spacing:.05em;}
+  .admin-unlock-btn:hover{background:#8B0000;}
+  #pw-error{color:#c62828;font-size:.82rem;margin-top:.5rem;display:none;}
+
+  /* ADMIN PANEL */
+  .admin-panel{max-width:660px;margin:0 auto;padding:2rem 1rem;display:none;}
+  .admin-banner{background:#c62828;color:white;padding:1rem 1.5rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;font-size:.85rem;font-weight:600;}
+  .admin-logout{background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:.78rem;font-weight:700;}
+
+  /* FORM */
+  .lb-form{background:white;border-radius:8px;padding:2rem;border:1px solid var(--border);margin-bottom:2rem;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+  .lb-form h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--dark);margin-bottom:1.2rem;}
+  .lb-row{display:flex;gap:.8rem;flex-wrap:wrap;}
+  .lb-input{flex:1;min-width:140px;border:2px solid var(--border);border-radius:4px;padding:11px 14px;font-size:.92rem;font-family:'Source Sans 3',sans-serif;transition:border-color .2s;outline:none;}
+  .lb-input:focus{border-color:var(--red);}
+  .lb-submit{background:var(--red);color:white;border:none;padding:11px 22px;border-radius:4px;font-size:.88rem;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap;}
+  .lb-submit:hover{background:var(--dark-red);}
+  .anon-toggle{display:flex;align-items:center;gap:10px;margin-top:1rem;cursor:pointer;user-select:none;font-size:.85rem;color:var(--mid);}
+  .anon-toggle input{width:16px;height:16px;accent-color:var(--red);cursor:pointer;}
+  #lb-msg{margin-top:.8rem;font-size:.85rem;display:none;font-weight:600;}
+
+  /* LEADERBOARD */
+  .lb-container{max-width:660px;margin:0 auto;padding:0 1rem 3rem;}
+  .lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;margin-top:1.5rem;}
+  .lb-header-label{font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);}
+  .lb-total{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red);font-weight:700;}
+  .lb-list{list-style:none;}
+  .lb-item{display:flex;align-items:center;gap:1rem;background:white;border:1px solid var(--border);border-radius:6px;padding:1rem 1.4rem;margin-bottom:.6rem;transition:transform .2s,box-shadow .2s;animation:slideIn .35s ease;}
+  @keyframes slideIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+  .lb-item:hover{transform:translateX(4px);box-shadow:0 4px 18px rgba(0,0,0,0.08);}
+  .lb-rank{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0;}
+  .lb-rank.gold{background:#FFD700;color:#7a6000;}
+  .lb-rank.silver{background:#C0C0C0;color:#4a4a4a;}
+  .lb-rank.bronze{background:#CD7F32;color:#5c3210;}
+  .lb-rank.other{background:var(--light);color:var(--mid);}
+  .lb-name{flex:1;font-weight:600;font-size:.95rem;}
+  .lb-anon-tag{font-size:.7rem;color:#aaa;font-weight:400;margin-left:4px;}
+  .lb-amount{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--red);}
+  .lb-delete{background:none;border:none;color:#ddd;cursor:pointer;font-size:1rem;padding:3px 7px;border-radius:3px;transition:color .2s,background .2s;display:none;}
+  .lb-delete:hover{color:#c62828;background:#fce4ec;}
+  .admin-mode .lb-delete{display:block;}
+  .lb-empty{text-align:center;padding:3rem;color:#aaa;font-style:italic;font-size:.95rem;}
+
+  /* FADE */
+  .fade-up{opacity:0;transform:translateY(22px);transition:opacity .5s ease,transform .5s ease;}
+  .fade-up.visible{opacity:1;transform:translateY(0);}
+
+  footer{background:#111;color:rgba(255,255,255,.5);text-align:center;padding:2rem;font-size:.82rem;border-top:4px solid var(--red);}
+  footer strong{color:white;}
+
+  @media(max-width:680px){
+    .nav-links{display:none;}
+    .swot-grid,.qr-inner{grid-template-columns:1fr;}
+    .lb-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="nav-cross"></div>
+    <div>
+      <div class="nav-title">British Red Cross</div>
+      <div class="nav-sub">Manchester College · Level 3 Business · Unit 4</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a id="nav-home"  onclick="showPage('home')" class="active">Overview</a></li>
+    <li><a id="nav-page2" onclick="showPage('page2')">Case Studies</a></li>
+    <li><a id="nav-page3" onclick="showPage('page3')">PESTEL &amp; SWOT</a></li>
+    <li><a id="nav-page4" onclick="showPage('page4')">Fundraiser Board</a></li>
+  </ul>
+</nav>
+
+
+<!-- ══════════ PAGE 1 ══════════ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-bg-cross"></div>
+    <div class="hero-content">
+      <span class="hero-tag">Since 1870 · The UK's Only 24/7 Volunteer Emergency Organisation</span>
+      <h1>Humanity.<br><span>Without Borders.</span></h1>
+      <p>The British Red Cross responds to crises of every kind, ensuring that people affected by disaster receive the support they need.</p>
+      <p class="hero-college">Manchester College · Level 3 Business Studies · Unit 4 Charity Event</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('page4')">Our Fundraiser Board</button>
+        <button class="btn-outline" onclick="showPage('page2')">Case Studies</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- S1: What Does BRC Do -->
+  <section class="section" style="background:white;">
+    <div class="section-inner">
+      <div class="section-label">Section 01</div>
+      <h2 class="section-title">What Does the British Red Cross Do?</h2>
+      <p class="section-sub">The British Red Cross responds to crises of every kind, ensuring that those affected receive the humanitarian support they need.</p>
+      <div style="margin-top:2rem;">
+        <span class="feature-pill">24/7 Emergency Response</span>
+        <span class="feature-pill">Global Red Cross Network</span>
+        <span class="feature-pill">Royal Charter Legal Status</span>
+        <span class="feature-pill">Official Government Auxiliary</span>
+      </div>
+      <div class="grid-3" style="margin-top:2rem;">
+        <div class="card fade-up"><div class="card-accent"></div><h3>24/7 Emergency Response</h3><p>The British Red Cross is the only volunteer organisation in the UK that provides emergency support around the clock, 365 days a year — ready to act the moment disaster strikes.</p></div>
+        <div class="card fade-up"><div class="card-accent"></div><h3>Global Network</h3><p>As part of the International Red Cross and Red Crescent Movement, the organisation can mobilise resources across borders, ensuring aid reaches those who need it wherever they are.</p></div>
+        <div class="card fade-up"><div class="card-accent"></div><h3>Legal Status</h3><p>Established under a Royal Charter, the British Red Cross serves as the UK government's official auxiliary in the humanitarian field, providing unique legal credibility and authority.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="page-divider">
+
+  <!-- S2: Aims -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">Section 02</div>
+      <h2 class="section-title">Aims and Objectives</h2>
+      <p class="section-sub">Core mission: <em>"To support people in crisis, whoever and wherever they are."</em></p>
+      <p style="margin-top:.6rem;font-size:.85rem;color:var(--mid);">Three strategic pillars — 2030 Strategy</p>
+      <div class="aims-grid">
+        <div class="aim-item fade-up"><div class="aim-icon"></div><h4>Disaster Response</h4><p>Helping communities prepare for, respond to, and recover from emergencies and natural disasters across the UK and internationally.</p></div>
+        <div class="aim-item fade-up"><div class="aim-icon"></div><h4>Migration &amp; Displacement</h4><p>Supporting refugees and asylum seekers with practical assistance, legal guidance, and emotional care as they rebuild their lives.</p></div>
+        <div class="aim-item fade-up"><div class="aim-icon"></div><h4>Health &amp; Social Care</h4><p>Reducing loneliness and helping patients return home safely from hospital, preventing unnecessary readmissions.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="page-divider">
+
+  <!-- S3: Strategy -->
+  <section class="section" style="background:white;">
+    <div class="section-inner">
+      <div class="section-label">Section 03</div>
+      <h2 class="section-title">Business Strategy</h2>
+      <p class="section-sub">The British Red Cross uses a diversified income model combined with a digital transformation strategy to ensure long-term financial sustainability.</p>
+      <div class="grid-2" style="margin-top:2.5rem;">
+        <div class="strategy-card fade-up"><div class="num">01</div><h4>Retail Strategy</h4><p>Operating more than 300 charity shops across the UK, converting donated goods into vital funding for humanitarian work.</p></div>
+        <div class="strategy-card fade-up"><div class="num">02</div><h4>Fee-Based Services</h4><p>Offering paid first aid training courses and wheelchair hire through a social enterprise model to subsidise humanitarian operations.</p></div>
+        <div class="strategy-card fade-up"><div class="num">03</div><h4>Corporate Partnerships</h4><p>Building long-term strategic alliances with major companies such as Aviva and Land Rover to diversify income streams.</p></div>
+        <div class="strategy-card fade-up"><div class="num">04</div><h4>Digital Transformation</h4><p>Deploying AI and cloud-based systems to streamline donation processing and administration, improving operational efficiency.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="page-divider">
+
+  <!-- S4: SMART -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">Section 04</div>
+      <h2 class="section-title">Achieving SMART Objectives Through Cost Savings</h2>
+      <p class="section-sub">By cutting costs and maximising resources, the British Red Cross sets and meets <strong>Specific, Measurable, Achievable, Relevant, and Time-bound</strong> goals.</p>
+      <div class="grid-3" style="margin-top:2.5rem;">
+        <div class="card fade-up"><div class="card-accent"></div><h3>Volunteer Model</h3><p>Making extensive use of volunteers rather than paid employees significantly reduces staffing costs whilst building community engagement and a sense of shared purpose.</p></div>
+        <div class="card fade-up"><div class="card-accent"></div><h3>Supply Chain Optimisation</h3><p>Sharing procurement networks with the International Red Cross enables bulk purchasing, reducing the unit cost of relief supplies and maximising the impact of every pound spent.</p></div>
+        <div class="card fade-up"><div class="card-accent"></div><h3>Digital Automation</h3><p>AI and cloud systems handle donations and administrative tasks, reducing human error, lowering processing time, and cutting operational costs across the organisation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="support-btn-wrap" style="background:var(--light-red);">
+    <p style="color:var(--mid);margin-bottom:1rem;font-size:.9rem;">Want to find out how you can help?</p>
+    <button class="random-btn" onclick="openSupport()"><span class="heart">❤</span>How Can You Support the British Red Cross?</button>
+  </div>
+</div>
+
+
+<!-- ══════════ PAGE 2: CASE STUDIES ══════════ -->
+<div id="page-page2" class="page">
+  <section style="padding:4rem 2rem 2rem;background:white;">
+    <div class="section-inner">
+      <div class="section-label">Section 05</div>
+      <h2 class="section-title">Three Real-World Case Studies</h2>
+      <p class="section-sub">How the British Red Cross has made a tangible difference during real crises.</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:1rem;">
+    <div class="section-inner">
+
+      <div class="example-card fade-up">
+        <div class="example-header"><div class="ex-num">1</div><div><h3>COVID-19 Pandemic</h3><p style="opacity:.8;font-size:.85rem;">Mobilising tens of thousands of volunteers to support the NHS</p></div></div>
+        <div class="example-body">
+          <p>During the height of the pandemic, the British Red Cross mobilised tens of thousands of volunteers to support the NHS — distributing essential supplies, transporting vulnerable people to vaccination appointments, and providing a vital lifeline for those most at risk.</p>
+          <div class="img-placeholder"><div class="ph-icon">📷</div><p>Photo / Article Placeholder — COVID-19</p><span>Place your image or article content here</span></div>
+        </div>
+      </div>
+
+      <div class="example-card fade-up">
+        <div class="example-header"><div class="ex-num">2</div><div><h3>Ukraine Crisis</h3><p style="opacity:.8;font-size:.85rem;">Supporting refugees arriving in the United Kingdom</p></div></div>
+        <div class="example-body">
+          <p>The British Red Cross provided comprehensive support to Ukrainian refugees arriving in the UK, including welcome packs, legal advice, and emotional support — helping displaced families to rebuild their lives in an unfamiliar country with dignity and compassion.</p>
+          <div class="img-placeholder"><div class="ph-icon"></div><p>Photo / Article Placeholder — Ukraine Crisis</p><span>Place your image or article content here</span></div>
+        </div>
+      </div>
+
+      <div class="example-card fade-up">
+        <div class="example-header"><div class="ex-num">3</div><div><h3>Winter Warm Campaign</h3><p style="opacity:.8;font-size:.85rem;">Stationed in NHS A&amp;E departments every winter</p></div></div>
+        <div class="example-body">
+          <p>Every winter, the British Red Cross stations staff in NHS Accident and Emergency departments to support patients being discharged. They ensure individuals return home to a warm environment with food and practical support, reducing the risk of readmission caused by cold or loneliness.</p>
+          <div class="img-placeholder"><div class="ph-icon"></div><p>Photo / Article Placeholder — Winter Warm Campaign</p><span>Place your image or article content here</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <div class="support-btn-wrap" style="background:var(--light-red);">
+    <button class="random-btn" onclick="openSupport()"><span class="heart">❤</span>How Can You Support the British Red Cross?</button>
+  </div>
+</div>
+
+
+<!-- ══════════ PAGE 3: PESTEL & SWOT ══════════ -->
+<div id="page-page3" class="page">
+  <section style="padding:4rem 2rem 2rem;background:white;">
+    <div class="section-inner">
+      <div class="section-label">Section 06</div>
+      <h2 class="section-title">PESTEL &amp; SWOT Analysis</h2>
+      <p class="section-sub">A comprehensive examination of the macro-environment and internal strategic position of the British Red Cross.</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:2rem;">
+    <div class="section-inner">
+      <div class="section-label">PESTEL Analysis</div>
+      <h3 class="section-title" style="font-size:1.8rem;">Macro-Environmental Factors</h3>
+      <div style="overflow-x:auto;margin-top:1.5rem;" class="fade-up">
+        <table>
+          <thead><tr><th style="width:150px;">Factor</th><th>Key Considerations</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Political</strong></td><td>Shifts in government refugee policy and international geopolitical conflicts directly affect overseas relief operations.</td></tr>
+            <tr><td><strong>Economic</strong></td><td>The UK Cost of Living Crisis has reduced both the willingness and capacity of the public to make charitable donations.</td></tr>
+            <tr><td><strong>Social</strong></td><td>An ageing population increases demand for social care services; public expectations of transparency from charities continue to rise.</td></tr>
+            <tr><td><strong>Technological</strong></td><td>Big data analytics help identify disaster hotspots; social media platforms enable large-scale digital fundraising campaigns.</td></tr>
+            <tr><td><strong>Environmental</strong></td><td>Climate change is causing more frequent extreme weather events such as flooding, placing ever-greater strain on emergency response capacity.</td></tr>
+            <tr><td><strong>Legal</strong></td><td>Strict data protection legislation (GDPR) and charity law regulations increase compliance costs and administrative demands.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <hr class="page-divider">
+  <section class="section" style="background:var(--cream);">
+    <div class="section-inner">
+      <div class="section-label">SWOT Analysis</div>
+      <h3 class="section-title" style="font-size:1.8rem;">Internal Strengths &amp; Weaknesses</h3>
+      <div class="swot-grid fade-up">
+        <div class="swot-cell s"><div class="swot-label">Strengths</div><h4>Strong Foundations</h4><p>A globally recognised brand, an extensive volunteer network, and close ties with government provide a significant and enduring competitive advantage.</p></div>
+        <div class="swot-cell w"><div class="swot-label">Weaknesses</div><h4>Structural Challenges</h4><p>High operating costs and heavy reliance on public donations leave financial stability vulnerable to economic downturns and shifts in public sentiment.</p></div>
+        <div class="swot-cell o"><div class="swot-label">Opportunities</div><h4>Growth Potential</h4><p>Digital healthcare partnerships and the expanding Corporate Social Responsibility (CSR) market offer new avenues for income and collaboration.</p></div>
+        <div class="swot-cell t"><div class="swot-label">Threats</div><h4>External Risks</h4><p>Competition for funding from other large charities such as Oxfam, and the risk of declining donations during an economic recession.</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="support-btn-wrap" style="background:var(--light-red);">
+    <button class="random-btn" onclick="openSupport()"><span class="heart">❤</span>How Can You Support the British Red Cross?</button>
+  </div>
+</div>
+
+
+<!-- ══════════ PAGE 4: FUNDRAISER BOARD ══════════ -->
+<div id="page-page4" class="page">
+
+  <!-- Hero -->
+  <div class="lb-hero">
+    <div style="font-size:.72rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;">Manchester College · Unit 4 Charity Event</div>
+    <h2>Refusing to ignore<br><em>people in crisis.</em></h2>
+    <p class="hero-quote">Together, we are the world's emergency responders,<br>and cheers to the power of kindness! ❤️</p>
+    <div class="college-badge">British Red Cross · Our Official Charity Partner</div>
+  </div>
+
+  <!-- QR Codes -->
+  <div class="qr-section">
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);">Scan to Access</div>
+    </div>
+    <div class="qr-inner">
+      <div class="qr-card admin-qr">
+        <h4>Admin Access</h4>
+        <p>For Manchester College event staff only. Scan to open the admin panel where you can add and manage donation records.</p>
+        <div class="qr-box" id="qr-admin"></div>
+        <div class="qr-note">Event Staff Only</div>
+      </div>
+      <div class="qr-card public-qr">
+        <h4>👁 Public Leaderboard</h4>
+        <p>For all visitors and supporters. Scan to view the live donation leaderboard and see who has contributed to our fundraiser.</p>
+        <div class="qr-box" id="qr-public"></div>
+        <div class="qr-note">Open to Everyone</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Gate -->
+  <div id="admin-gate-section" style="display:none;">
+    <div class="admin-gate">
+      <div class="admin-gate-box">
+        <h3>Admin Panel</h3>
+        <p>Enter the event staff password to add or remove donation records from the leaderboard.</p>
+        <input type="password" id="admin-pw-input" placeholder="Password" maxlength="30" onkeydown="if(event.key==='Enter')attemptLogin()">
+        <button class="admin-unlock-btn" onclick="attemptLogin()">Unlock Admin Panel</button>
+        <p id="pw-error">Incorrect password — please try again.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="admin-panel" id="admin-panel">
+    <div class="admin-banner">
+      <div><strong>Admin Mode</strong> — Manchester College Event Staff</div>
+      <button class="admin-logout" onclick="adminLogout()">Log Out</button>
+    </div>
+    <div class="lb-form">
+      <h3>Add a Donation Record</h3>
+      <div class="lb-row">
+        <input class="lb-input" id="lb-name" type="text" placeholder="Donor name or organisation" maxlength="40">
+        <input class="lb-input" id="lb-amount" type="number" placeholder="Amount (£)" min="0.01" step="0.01" max="99999">
+      </div>
+      <label class="anon-toggle">
+        <input type="checkbox" id="lb-anon">
+        Display as <em>Anonymous</em> on the public leaderboard
+      </label>
+      <div style="margin-top:1rem;">
+        <button class="lb-submit" onclick="addDonation()">Add to Leaderboard ✓</button>
+      </div>
+      <p id="lb-msg"></p>
+    </div>
+  </div>
+
+  <!-- Public Leaderboard -->
+  <div class="lb-container" id="public-lb">
+    <div class="lb-header">
+      <div class="lb-header-label">Live Donation Leaderboard</div>
+      <div class="lb-total" id="lb-total"></div>
+    </div>
+    <ul class="lb-list" id="lb-list">
+      <li class="lb-empty">No donations recorded yet — be the first! 🎉</li>
+    </ul>
+    <p style="text-align:center;font-size:.72rem;color:#bbb;margin-top:2rem;">✦ All proceeds from our Manchester College event will be donated to the British Red Cross ✦</p>
+  </div>
+
+</div><!-- /page4 -->
+
+
+<!-- SUPPORT MODAL -->
+<div class="modal-overlay" id="support-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeSupport()">✕</button>
+      <h2>Support the British Red Cross</h2>
+      <p>There are many ways you can help support the British Red Cross's humanitarian work.</p>
+    </div>
+    <div class="modal-body">
+      <div class="support-section">
+        <h3>Make a Donation</h3>
+        <ul>
+          <li><strong>Regular or one-off donation:</strong> Choose to give monthly or make a single contribution to help the organisation plan long-term relief work and respond swiftly to emergencies.</li>
+          <li><strong>Appeal-specific donation:</strong> Donate directly to an ongoing crisis appeal — such as Gaza, Ukraine, Sudan, or the African food crisis.</li>
+          <li><strong>Disaster Fund:</strong> Contribute to this fund so the Red Cross can respond immediately when disasters such as floods or hurricanes strike.</li>
+          <li><strong>Legacy gift:</strong> Leave a gift in your will to ensure the Red Cross can continue supporting people in crisis long into the future.</li>
+        </ul>
+      </div>
+      <hr class="support-divider">
+      <div class="support-section">
+        <h3>Become a Volunteer</h3>
+        <ul>
+          <li><strong>Diverse roles available:</strong> Get involved in frontline emergency response, health and care support, or help in a charity shop or warehouse.</li>
+          <li><strong>Young people welcome:</strong> Those aged 15 and above can take part in many services, with internship and work experience programmes for students.</li>
+          <li><strong>Remote volunteering:</strong> If your time is limited, choose an online role and support services from home.</li>
+          <li><strong>Community education:</strong> Become a workshop facilitator teaching first aid and resilience skills in your local community.</li>
+        </ul>
+      </div>
+      <hr class="support-divider">
+      <div class="support-section">
+        <h3>Fundraising Events</h3>
+        <ul>
+          <li><strong>Challenge events:</strong> Take part in events such as the <em>Walk for Humanity</em> to raise money and awareness.</li>
+          <li><strong>Host your own event:</strong> Organise a fundraiser with your school, colleagues, or community — such as a <em>Pour a Cup of Kindness</em> tea party.</li>
+        </ul>
+      </div>
+      <hr class="support-divider">
+      <div class="support-section">
+        <h3>Shop &amp; Support</h3>
+        <ul>
+          <li><strong>Visit a charity shop or donate:</strong> Buy second-hand items in store, online, or via the Red Cross eBay shop — or donate clothing, furniture, and household goods.</li>
+          <li><strong>Use paid services:</strong> Attend a first aid training course or hire a wheelchair. All profits are reinvested into humanitarian work.</li>
+        </ul>
+      </div>
+      <hr class="support-divider">
+      <div class="support-section">
+        <h3>Education &amp; Awareness</h3>
+        <ul>
+          <li><strong>Share resources:</strong> Use and distribute free Red Cross educational materials to teach humanitarian values, climate awareness, and first aid.</li>
+          <li><strong>Learn first aid:</strong> Download the Red Cross First Aid App or watch training videos to be ready for unexpected emergencies.</li>
+        </ul>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button class="btn-primary" onclick="closeSupport();showPage('page4');">See Our Fundraiser Leaderboard ❤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    <strong>British Red Cross</strong> — Humanity. Without Borders.<br>
+    <span style="font-size:.72rem;margin-top:.3rem;display:block;opacity:.5;">A Manchester College Level 3 Business Studies Unit 4 Charity Event · Registered Charity No. 220949 · Royal Charter 1908</span>
+  </p>
+</footer>
+
+
+<script>
+/* ─────────────────────────────────
+   Password here
+───────────────────────────────── */
+const ADMIN_PASSWORD = 'TheCreatorIsFau';
+const STORAGE_KEY    = 'brc_mc_v3';
+
+/* ─────────────────────────────────
+   PAGE NAV
+───────────────────────────────── */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(observeFade, 120);
+  if (id === 'page4') renderLeaderboard();
+}
+
+/* ─────────────────────────────────
+   SCROLL FADE
+───────────────────────────────── */
+function observeFade() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el => obs.observe(el));
+}
+
+/* ─────────────────────────────────
+   SUPPORT MODAL
+───────────────────────────────── */
+function openSupport() { document.getElementById('support-modal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeSupport() { document.getElementById('support-modal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('support-modal').addEventListener('click', function(e){ if(e.target===this) closeSupport(); });
+
+/* ─────────────────────────────────
+   DATA LAYER
+───────────────────────────────── */
+function loadDonations() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveDonations(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+
+/* ─────────────────────────────────
+   ADMIN AUTH
+───────────────────────────────── */
+let isAdmin = false;
+
+function attemptLogin() {
+  const pw = document.getElementById('admin-pw-input').value;
+  if (pw === ADMIN_PASSWORD) {
+    isAdmin = true;
+    document.getElementById('admin-gate-section').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('public-lb').classList.add('admin-mode');
+    renderLeaderboard();
+  } else {
+    document.getElementById('pw-error').style.display = 'block';
+    document.getElementById('admin-pw-input').value = '';
+    document.getElementById('admin-pw-input').focus();
+    setTimeout(() => document.getElementById('pw-error').style.display='none', 3000);
+  }
+}
+
+function adminLogout() {
+  isAdmin = false;
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('public-lb').classList.remove('admin-mode');
+  const url = new URL(window.location.href);
+  url.searchParams.delete('mode');
+  history.replaceState({}, '', url.toString());
+}
+
+/* ─────────────────────────────────
+   QR CODES
+   These link to the SAME file with
+   ?mode=admin or ?mode=public
+   so scanning opens the right view.
+───────────────────────────────── */
+function generateQRCodes() {
+  const base = window.location.href.split('?')[0];
+  try {
+    new QRCode(document.getElementById('qr-admin'), {
+      text: base + '?mode=admin',
+      width:130, height:130,
+      colorDark:'#c62828', colorLight:'#fff8f8',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    new QRCode(document.getElementById('qr-public'), {
+      text: base + '?mode=public',
+      width:130, height:130,
+      colorDark:'#1565c0', colorLight:'#f0f4ff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) { console.warn('QR generation failed', e); }
+}
+
+/* ─────────────────────────────────
+   ADD DONATION
+───────────────────────────────── */
+function addDonation() {
+  const name   = document.getElementById('lb-name').value.trim();
+  const amount = parseFloat(document.getElementById('lb-amount').value);
+  const anon   = document.getElementById('lb-anon').checked;
+
+  if (!name)                { showMsg('Please enter a donor name.', true); return; }
+  if (!amount || amount<=0) { showMsg('Please enter a valid amount.', true); return; }
+
+  const list = loadDonations();
+  list.push({ id: Date.now(), name, anon, amount: Math.round(amount*100)/100, time: Date.now() });
+  saveDonations(list);
+
+  document.getElementById('lb-name').value = '';
+  document.getElementById('lb-amount').value = '';
+  document.getElementById('lb-anon').checked = false;
+  showMsg('✓ Donation added successfully!', false);
+  renderLeaderboard();
+}
+
+function showMsg(text, isErr) {
+  const el = document.getElementById('lb-msg');
+  el.textContent = text;
+  el.style.color = isErr ? 'var(--red)' : 'var(--green)';
+  el.style.display = 'block';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.style.display='none', 4000);
+}
+
+/* ─────────────────────────────────
+   DELETE DONATION (admin only)
+───────────────────────────────── */
+function deleteDonation(id) {
+  if (!isAdmin) return;
+  if (!confirm('Remove this donation record from the leaderboard?')) return;
+  saveDonations(loadDonations().filter(d => d.id !== id));
+  renderLeaderboard();
+}
+
+/* ─────────────────────────────────
+   RENDER LEADERBOARD
+───────────────────────────────── */
+function renderLeaderboard() {
+  const donations = loadDonations().sort((a,b) => b.amount - a.amount);
+  const listEl    = document.getElementById('lb-list');
+  const totalEl   = document.getElementById('lb-total');
+
+  const total = donations.reduce((s,d) => s+d.amount, 0);
+  totalEl.textContent = donations.length
+    ? 'Total raised: £' + total.toLocaleString('en-GB', {minimumFractionDigits:2,maximumFractionDigits:2})
+    : '';
+
+  if (!donations.length) {
+    listEl.innerHTML = '<li class="lb-empty">No donations recorded yet — be the first to contribute! 🎉</li>';
+    return;
+  }
+
+  const rankCls = ['gold','silver','bronze'];
+  const rankLbl = ['🥇','🥈','🥉'];
+
+  listEl.innerHTML = donations.map((d,i) => {
+    const cls  = i<3 ? rankCls[i] : 'other';
+    const lbl  = i<3 ? rankLbl[i] : (i+1);
+    const displayName = d.anon ? 'Anonymous Supporter' : esc(d.name);
+    const anonTag = d.anon ? '<span class="lb-anon-tag">(anonymous)</span>' : '';
+    const delBtn  = `<button class="lb-delete" onclick="deleteDonation(${d.id})" title="Remove">✕</button>`;
+    const amount  = '£' + d.amount.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+    return `<li class="lb-item">
+      <div class="lb-rank ${cls}">${lbl}</div>
+      <div class="lb-name">${displayName}${anonTag}</div>
+      <div class="lb-amount">${amount}</div>
+      ${delBtn}
+    </li>`;
+  }).join('');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ─────────────────────────────────
+   INIT
+───────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  observeFade();
+  generateQRCodes();
+
+  // Handle ?mode= param from QR scan
+  const mode = new URLSearchParams(window.location.search).get('mode');
+  if (mode === 'admin' || mode === 'public') {
+    showPage('page4');
+    if (mode === 'admin') {
+      document.getElementById('admin-gate-section').style.display = 'block';
+    }
+  }
+});
+</script>
+</body>
+</html>
